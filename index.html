@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>API Instagram</title>
+        <link rel="stylesheet" href="assets/bootstrap/dist/css/bootstrap.min.css">
+        <style>
+
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <h1 class="text-center my-5">
+                    Feed Instagram
+                </h1>
+    
+                <div id="insta-feed">
+    
+                </div>
+            </div>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            <script>
+                $(function () {
+
+                    const token = "IGQVJWbUE1b256LWhfMG90RTVLOUdOdGhfOTJVM090MHY5LUVtblRWY21tNnNCZAE5xZAFhyUl9ta2VqdHNnWTBoSUtneVFFRTk2cFp6N0djenR3RkpubXhwZAzcwRGFfTl9DanhEcGM4TzVXUTF0Q1AwYQZDZD";
+
+                    const url = "https://graph.instagram.com/me/media?access_token="+token+"&fields=media_url,media_type,caption,permalink"
+
+                    $.get(url).then(function(response){
+                        //console.log('retorno: ', response.data);
+                        let json = response.data;
+                        let content = '<div class="mx-auto p-5 row">';
+
+                        for(let p = 0; p < json.length; p++) {
+                            let feed = json[p];
+                            let titulo = feed.caption !== null ? feed.caption : '';
+                            let tipo = feed.media_type;
+                            if(tipo === 'VIDEO' ){
+                                content += '<div class="mx-auto p-5 col-lg-6 col-sm-12"><a href="'+feed.permalink+'"><video class="w-100 h-100" controls><source src="'+feed.media_url+'" type="video/mp4"></video></a></div>';
+                            }
+                            else if(tipo === 'IMAGE') {
+                                content += '<div class="mx-auto p-5 col-lg-6 col-sm-12"><a href="'+feed.permalink+'"><img class="w-100 h-100" title="'+titulo+'" alt="'+titulo+'" src="'+feed.media_url+'"></a></div>';
+                            }
+                        }
+                        content += '</div>';
+                        $('#insta-feed').html(content);
+                    });
+                });
+            </script>
+        </div>
+
+        <script src="assets/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    </body>
+</html>
